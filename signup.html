@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup | RideApp</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        select {
+            width: 100%;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            color: #333;
+        }
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🚗 RideApp</div>
+    <div class="roles">
+        <button class="role-btn active" data-role="rider">Riders</button>
+        <button class="role-btn" data-role="driver">Drivers</button>
+        <button class="role-btn" data-role="admin">Admin</button>
+    </div>
+</nav>
+
+<div class="signup-wrapper">
+    <div class="auth-box">
+        <h2 id="roleTitle">Rider Signup</h2>
+        <form id="signupForm"></form>
+
+        <p class="switch-text">
+            Already registered? <a href="index.html">Login</a>
+        </p>
+    </div>
+
+    <div class="manual-driver" id="manualBox">
+        <h3>Add Manual Drivers</h3>
+        <p style="font-size: 0.85rem; color: #666; margin-bottom: 1rem;">
+            For drivers without smartphones
+        </p>
+        <input type="text" id="manualName" placeholder="Driver Name" required>
+        <input type="tel" id="manualPhone" placeholder="Phone (10 digits)" pattern="[0-9]{10}" required>
+        <input type="text" id="manualVehicle" placeholder="Vehicle Type" required>
+        <input type="text" id="manualVehicleNo" placeholder="Vehicle Number" required>
+        <select id="manualZone" required>
+            <option value="">Select Zone</option>
+        </select>
+        <button class="secondary-btn" onclick="addManualDriver()">Add Driver</button>
+        
+        <!-- SMS Registration Info -->
+        <div style="margin-top: 1.5rem; padding: 1rem; background: #fef3c7; border-radius: 10px; border: 2px solid #fbbf24;">
+            <h4 style="color: #92400e; margin-bottom: 0.5rem; font-size: 0.95rem;">📱 For Keypad Phone Users</h4>
+            <p style="font-size: 0.8rem; color: #78350f; margin-bottom: 0.5rem;">
+                Drivers can register and update via SMS!
+            </p>
+            <div style="font-size: 0.75rem; color: #78350f; line-height: 1.6;">
+                <strong>Send SMS to: 8979980464</strong><br><br>
+                
+                <strong>📝 To Register:</strong><br>
+                <code style="background: white; padding: 2px 6px; border-radius: 4px;">REG Name|Vehicle|Number|Zone</code><br>
+                <em>Example: REG John|Auto|UP32AB1234|Main Gate</em><br><br>
+                
+                <strong>📍 Update Location:</strong><br>
+                <code style="background: white; padding: 2px 6px; border-radius: 4px;">LOC Hall 10</code><br><br>
+                
+                <strong>✅ Go Online:</strong><br>
+                <code style="background: white; padding: 2px 6px; border-radius: 4px;">AVAIL ON</code><br><br>
+                
+                <strong>❌ Go Offline:</strong><br>
+                <code style="background: white; padding: 2px 6px; border-radius: 4px;">AVAIL OFF</code><br><br>
+                
+                <strong>ℹ️ Get Help:</strong><br>
+                <code style="background: white; padding: 2px 6px; border-radius: 4px;">HELP</code>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="js/firebase-config.js"></script>
+
+<!-- Signup Script -->
+<script src="js/signup.js"></script>
+</body>
+</html>

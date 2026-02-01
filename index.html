@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | RideApp</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🚗 RideApp</div>
+    <div class="roles">
+        <button class="role-btn active" data-role="rider">Riders</button>
+        <button class="role-btn" data-role="driver">Drivers</button>
+        <button class="role-btn" data-role="admin">Admin</button>
+    </div>
+</nav>
+
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2 id="roleTitle">Rider Login</h2>
+
+        <form id="loginForm">
+            <input type="tel" id="phoneNumber" placeholder="Phone Number (10 digits)" required pattern="[0-9]{10}" maxlength="10">
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="primary-btn">Login</button>
+        </form>
+
+        <p class="switch-text">
+            Don't have an account? <a href="signup.html">Signup</a>
+        </p>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="js/firebase-config.js"></script>
+
+<!-- Login Script -->
+<script src="js/login.js"></script>
+</body>
+</html>

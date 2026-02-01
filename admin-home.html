@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | RideApp</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .drivers-list {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .drivers-list h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .driver-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .driver-item:last-child {
+            border-bottom: none;
+        }
+
+        .driver-info {
+            flex: 1;
+        }
+
+        .driver-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .driver-details {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-manual {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .logout-btn {
+            background: #ef4444 !important;
+            color: white !important;
+        }
+        
+        .logout-btn:hover {
+            background: #dc2626 !important;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">🚗 RideApp</div>
+    <div class="roles">
+        <button class="role-btn" disabled style="opacity: 0.5; cursor: not-allowed;">Riders</button>
+        <button class="role-btn" disabled style="opacity: 0.5; cursor: not-allowed;">Drivers</button>
+        <button class="role-btn active">Admin</button>
+        <button class="logout-btn role-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+</nav>
+
+<div class="admin-content">
+    <h1 style="color: white; margin-bottom: 2rem;">Admin Dashboard</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="totalDrivers">0</div>
+            <div class="stat-label">Total Drivers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="availableDrivers">0</div>
+            <div class="stat-label">Available Drivers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="manualDrivers">0</div>
+            <div class="stat-label">Manual Drivers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalRiders">0</div>
+            <div class="stat-label">Total Riders</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalRides">0</div>
+            <div class="stat-label">Total Rides</div>
+        </div>
+    </div>
+
+    <div class="drivers-list">
+        <h2>All Drivers</h2>
+        <div id="driversList">
+            <p style="text-align: center; color: #666;">Loading drivers...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="js/firebase-config.js"></script>
+
+<script>
+// Role protection
+if (localStorage.getItem("role") !== "admin") {
+    window.location.href = "index.html";
+}
+
+// Load admin statistics
+async function loadStats() {
+    try {
+        // Count total drivers
+        const driversSnapshot = await driversRef.once('value');
+        const totalDriversCount = driversSnapshot.numChildren();
+        document.getElementById('totalDrivers').textContent = totalDriversCount;
+
+        // Count available drivers and manual drivers
+        let availableCount = 0;
+        let manualCount = 0;
+        driversSnapshot.forEach((child) => {
+            if (child.val().available) availableCount++;
+            if (child.val().isManualEntry) manualCount++;
+        });
+        document.getElementById('availableDrivers').textContent = availableCount;
+        document.getElementById('manualDrivers').textContent = manualCount;
+
+        // Count total riders
+        const ridersSnapshot = await ridersRef.once('value');
+        document.getElementById('totalRiders').textContent = ridersSnapshot.numChildren();
+
+        // Count total rides
+        const ridesSnapshot = await ridesRef.once('value');
+        document.getElementById('totalRides').textContent = ridesSnapshot.numChildren();
+
+        // Load drivers list
+        loadDriversList(driversSnapshot);
+
+    } catch (error) {
+        console.error("Error loading stats:", error);
+    }
+}
+
+// Load drivers list
+function loadDriversList(snapshot) {
+    const driversList = document.getElementById('driversList');
+    driversList.innerHTML = "";
+
+    if (!snapshot.exists()) {
+        driversList.innerHTML = '<p style="text-align: center; color: #666;">No drivers registered yet.</p>';
+        return;
+    }
+
+    snapshot.forEach((childSnapshot) => {
+        const driver = childSnapshot.val();
+        const driverItem = document.createElement('div');
+        driverItem.className = 'driver-item';
+        
+        let locationInfo = '';
+        if (driver.useGPS) {
+            locationInfo = driver.locationDescription || 'GPS Enabled';
+        } else if (driver.currentZone) {
+            locationInfo = driver.currentZone;
+        } else {
+            locationInfo = 'No location';
+        }
+        
+        let statusClass = 'status-unavailable';
+        let statusText = 'Unavailable';
+        
+        if (driver.isManualEntry) {
+            statusClass = 'status-manual';
+            statusText = '📱 Manual Entry';
+        } else if (driver.available) {
+            statusClass = 'status-available';
+            statusText = 'Available';
+        }
+        
+        driverItem.innerHTML = `
+            <div class="driver-info">
+                <div class="driver-name">${driver.name} ${driver.useGPS ? '📍' : '🏛️'}</div>
+                <div class="driver-details">
+                    ${driver.vehicle} (${driver.vehicleNumber}) • ${driver.phone} • ${locationInfo}
+                </div>
+            </div>
+            <span class="status-badge ${statusClass}">
+                ${statusText}
+            </span>
+        `;
+        driversList.appendChild(driverItem);
+    });
+}
+
+// Logout function
+function logout() {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+        auth.signOut().then(() => {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }).catch((error) => {
+            console.error("Logout error:", error);
+            alert("Error logging out. Please try again.");
+        });
+    }
+}
+
+// Initialize
+window.addEventListener('DOMContentLoaded', loadStats);
+</script>
+</body>
+</html>

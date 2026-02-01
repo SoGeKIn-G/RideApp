@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Ride | RideApp</title>
+    <link rel="stylesheet" href="css/rider-home.css">
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="logo">🚗 RideApp</div>
+    <div class="nav-roles">
+        <button class="nav-btn active">👥 Riders</button>
+        <button class="nav-btn" disabled style="opacity: 0.5; cursor: not-allowed;">🚗 Drivers</button>
+        <button class="nav-btn" disabled style="opacity: 0.5; cursor: not-allowed;">🛡️ Admin</button>
+        <button class="nav-btn logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Find Your Ride</h1>
+    <p class="subtitle">Select your locations to see available drivers near you.</p>
+
+    <div class="search-section">
+        <div class="input-group">
+            <label>From</label>
+            <input type="text" id="fromLocation" placeholder="Enter pickup location (e.g., Hall 10)">
+        </div>
+        <div class="input-group">
+            <label>To</label>
+            <input type="text" id="toLocation" placeholder="Enter destination (e.g., Main Gate)">
+        </div>
+        <button class="go-btn" onclick="loadDrivers()">🔍 Search Drivers</button>
+    </div>
+
+    <div class="drivers-section">
+        <div class="section-header">
+            <h2>Available Drivers</h2>
+            <span class="sort-info">(Sorted by distance - nearest first)</span>
+        </div>
+        <div id="driversContainer">
+            <p class="no-results">Click "Search Drivers" to find available drivers near your pickup location</p>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="js/firebase-config.js"></script>
+
+<!-- Rider Home Script -->
+<script src="js/rider-home.js"></script>
+</body>
+</html>

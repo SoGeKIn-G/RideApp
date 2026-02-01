@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard | RideApp</title>
+    <link rel="stylesheet" href="css/driver-home.css">
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="logo">🚗 RideApp</div>
+    <div class="nav-roles">
+        <button class="nav-btn" disabled style="opacity: 0.5; cursor: not-allowed;">👥 Riders</button>
+        <button class="nav-btn active">🚗 Drivers</button>
+        <button class="nav-btn" disabled style="opacity: 0.5; cursor: not-allowed;">🛡️ Admin</button>
+        <button class="nav-btn logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Driver Dashboard</h1>
+    <p class="subtitle">Manage your availability and location to receive ride requests.</p>
+
+    <div class="dashboard-grid">
+        <!-- Availability Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>⚡ Availability</h3>
+            </div>
+            <div class="card-body">
+                <p class="info-text">Toggle your status to receive ride requests.</p>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="availabilityToggle" checked onchange="toggleAvailability()">
+                    <span class="slider"></span>
+                </label>
+                <p class="status-text">Your current status is: <strong id="statusText" style="color: #10b981;">Available</strong></p>
+            </div>
+        </div>
+
+        <!-- Location Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3>📍 Location</h3>
+            </div>
+            <div class="card-body">
+                <p class="info-text" id="locationMethod">Zone-based location tracking</p>
+                
+                <!-- GPS Toggle -->
+                <label class="toggle-switch" style="margin-bottom: 1rem;">
+                    <input type="checkbox" id="gpsToggle" onchange="toggleGPS()">
+                    <span class="slider"></span>
+                </label>
+                <p style="font-size: 0.85rem; color: #6b7280; margin-bottom: 1rem;">
+                    <span id="gpsStatus">GPS Tracking OFF</span>
+                </p>
+                
+                <div class="location-display">
+                    <div class="last-location">
+                        <span class="location-label">Current Location:</span>
+                        <span class="location-value" id="lastLocation">Getting location...</span>
+                    </div>
+                    <div class="last-updated">
+                        <span class="time-label">Updated:</span>
+                        <span class="time-value" id="lastUpdated">Just now</span>
+                    </div>
+                </div>
+
+                <button class="update-location-btn" onclick="updateCurrentLocation()">
+                    📍 Update Location
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ride Requests Section -->
+    <div class="requests-section">
+        <h2>📋 Ride Requests</h2>
+        <p class="section-subtitle">Riders who contacted you</p>
+        <div id="requestsList">
+            <p class="no-requests">No ride requests at the moment</p>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="js/firebase-config.js"></script>
+
+<!-- Driver Home Script -->
+<script src="js/driver-home.js"></script>
+</body>
+</html>
